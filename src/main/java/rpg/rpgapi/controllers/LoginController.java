@@ -8,18 +8,12 @@ import rpg.rpgapi.RpgApiApplication;
 
 import java.util.Map;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = {"https://www.hellrpg.pl", "https://hellrpg.pl"}, allowedHeaders = "*")
 @RequestMapping(path = "/api", method = POST)
 public class LoginController {
-    @RequestMapping(path = "/test", method = POST, produces = "plain/text")
-    public String test() {
-        return "test";
-    }
-
     @RequestMapping(path = "/login", method = POST, produces = "application/json", consumes = "application/json")
     public String login(@RequestBody Map<String, Object> postData) {
         final String login = String.valueOf(postData.get("login"));
