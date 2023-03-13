@@ -37,6 +37,7 @@ public class MongoManager {
                         json.put("result", "true");
                         json.put("uuid", document.getString("_id"));
                         json.put("admin", "false");
+                        json.put("nick", document.getString("name"));
                         return json.toString();
                     }
 
@@ -52,6 +53,7 @@ public class MongoManager {
                         json.put("result", "true");
                         json.put("uuid", document.getString("_id"));
                         json.put("admin", "true");
+                        json.put("nick", document.getString("name"));
                         return json.toString();
                     } else {
                         json.put("result", "false");
@@ -62,7 +64,9 @@ public class MongoManager {
 
                 if (password.equals(code)) {
                     json.put("result", "true");
+                    json.put("admin", "false");
                     json.put("uuid", document.getString("_id"));
+                    json.put("nick", document.getString("name"));
                     return json.toString();
                 } else {
                     json.put("result", "false");
