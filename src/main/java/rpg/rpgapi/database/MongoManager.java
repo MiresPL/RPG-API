@@ -1,10 +1,21 @@
 package rpg.rpgapi.database;
 
+import com.mongodb.MongoException;
 import org.bson.Document;
 import org.json.JSONObject;
-import rpg.rpgapi.utils.Utils;
+import rpg.rpgapi.RpgApiApplication;
+import rpg.rpgapi.objects.*;
+import rpg.rpgapi.objects.dodatki.AkcesoriaDodatkowe;
+import rpg.rpgapi.objects.dodatki.AkcesoriaPodstawowe;
+import rpg.rpgapi.objects.dodatki.Bony;
+import rpg.rpgapi.objects.magazynier.MagazynierUser;
+import rpg.rpgapi.objects.pety.Pet;
+import rpg.rpgapi.objects.pety.UserPets;
+import rpg.rpgapi.objects.wyszkolenie.Wyszkolenie;
+
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class MongoManager {
     private final MongoConnectionPoolManager pool;
@@ -36,7 +47,6 @@ public class MongoManager {
                     if (password.equals(code)) {
                         json.put("result", "true");
                         json.put("uuid", document.getString("_id"));
-                        json.put("admin", "false");
                         json.put("nick", document.getString("name"));
                         return json.toString();
                     }
@@ -52,7 +62,6 @@ public class MongoManager {
                     if (adminPassword.equals(code)) {
                         json.put("result", "true");
                         json.put("uuid", document.getString("_id"));
-                        json.put("admin", "true");
                         json.put("nick", document.getString("name"));
                         return json.toString();
                     } else {
@@ -64,7 +73,6 @@ public class MongoManager {
 
                 if (password.equals(code)) {
                     json.put("result", "true");
-                    json.put("admin", "false");
                     json.put("uuid", document.getString("_id"));
                     json.put("nick", document.getString("name"));
                     return json.toString();
@@ -81,70 +89,72 @@ public class MongoManager {
         return json.toString();
     }
 
-    public String getProfile(final String uuid, final boolean isAdmin) {
-        final JSONObject json = new JSONObject();
-        final Document user = pool.getGracze().find(new Document("_id", uuid)).first();
-        assert user != null;
-        json.put("name", user.getString("name").replaceAll("\"", ""));
-        json.put("uuid", user.getString("_id").replaceAll("\"", ""));
-        json.put("guild", checkIfPlayerIsInGuild(uuid));
-        json.put("lvl", user.getInteger("lvl"));
-        if (isAdmin) {
-            json.put("adminRankName", user.getString("rankName").replaceAll("\"", ""));
-        } else {
-            json.put("rankName", user.getString("rankPlayerName").replaceAll("\"", ""));
-            json.put("rankTime", (user.getLong("rankPlayerTime") == -1 ? "LifeTime" : Utils.durationToString(user.getLong("rankPlayerTime"), false)));
+    public String pushToken(final String uuid, final String token) {
+        try {
+            this.pool.getWWWTokens().insertOne(new Document("_id", uuid).append("token", token).append("expire", System.currentTimeMillis() + 7_200_000));
+            return new JSONObject().put("result", "true").toString();
+        } catch (final MongoException e) {
+            return new JSONObject().put("result", "false").toString();
         }
-        json.put("punishmentHistory", parsePunishmentHistoryToJSON(user.getString("punishmentHistory")));
-        json.put("money", String.format("%.2f", user.getDouble("kasa")));
-        json.put("hellcoins", user.getInteger("hellcoins"));
-        json.put("inventory", user.getString("inventory").replaceAll("\"", ""));
-        json.put("enderchest", user.getString("enderchest").replaceAll("\"", ""));
-        json.put("armor", user.getString("armor").replaceAll("\"", ""));
+    }
 
-        final JSONObject bonuses = new JSONObject();
-        bonuses.put("highestCritical", String.format("%.2f", user.getDouble("krytyk")));
+    public void initProfile(final UUID uuid) {
+        final User user = new User(Objects.requireNonNull(pool.getGracze().find(new Document("_id", uuid)).first()));
+        final AkcesoriaPodstawowe akcesoriaPodstawowe = new AkcesoriaPodstawowe(Objects.requireNonNull(this.pool.getDodatki().find(new Document("_id", uuid)).first()).get("akcesoriaPodstawowe", Document.class));
+        final AkcesoriaDodatkowe akcesoriaDodatkowe = new AkcesoriaDodatkowe(Objects.requireNonNull(this.pool.getDodatki().find(new Document("_id", uuid)).first()).get("akcesoriaDodatkowe", Document.class));
+        final Bony bony = new Bony(Objects.requireNonNull(this.pool.getDodatki().find(new Document("_id", uuid)).first()).get("bony", Document.class));
+        final MagazynierUser magazynierUser = new MagazynierUser(Objects.requireNonNull(this.pool.getMagazynier().find(new Document("_id", uuid)).first()));
+        final Bao bao = new Bao(Objects.requireNonNull(this.pool.getBao().find(new Document("_id", uuid)).first()));
+        final Bonuses bonuses = new Bonuses(Objects.requireNonNull(this.pool.getBonuses().find(new Document("_id", uuid)).first()));
+        final Duszolog duszolog = new Duszolog(Objects.requireNonNull(this.pool.getDuszolog().find(new Document("_id", uuid)).first()));
+        final Gornik gornik = new Gornik(Objects.requireNonNull(this.pool.getGornik().find(new Document("_id", uuid)).first()));
+        //final Handlarz handlarz = new Handlarz(Objects.requireNonNull(this.pool.getHandlarz().find(new Document("_id", uuid)).first()));
+        final Kolekcjoner kolekcjoner = new Kolekcjoner(Objects.requireNonNull(this.pool.getKolekcjoner().find(new Document("_id", uuid)).first()));
+        final Lesnik lesnik = new Lesnik(Objects.requireNonNull(this.pool.getLesnik().find(new Document("_id", uuid)).first()));
+        final Lowca lowca = new Lowca(Objects.requireNonNull(this.pool.getLowca().find(new Document("_id", uuid)).first()));
+        final Medrzec medrzec = new Medrzec(Objects.requireNonNull(this.pool.getMedyk().find(new Document("_id", uuid)).first()));
+        final Metinolog metinolog = new Metinolog(Objects.requireNonNull(this.pool.getMetinolog().find(new Document("_id", uuid)).first()));
+        final Os os = new Os(Objects.requireNonNull(this.pool.getOsiagniecia().find(new Document("_id", uuid)).first()));
+        final Przyrodnik przyrodnik = new Przyrodnik(Objects.requireNonNull(this.pool.getPrzyrodnik().find(new Document("_id", uuid)).first()));
+        final Rybak rybak = new Rybak(Objects.requireNonNull(this.pool.getRybak().find(new Document("_id", uuid)).first()));
+        final Wyslannik wyslannik = new Wyslannik(Objects.requireNonNull(this.pool.getWyslannik().find(new Document("_id", uuid)).first()));
+        final Wyszkolenie wyszkolenie = new Wyszkolenie(Objects.requireNonNull(this.pool.getWyszkolenie().find(new Document("_id", uuid)).first()));
+        final Pet pet = new Pet(Objects.requireNonNull(this.pool.getPety().find(new Document("_id", uuid)).first()));
+        final UserPets userPets = new UserPets(Objects.requireNonNull(this.pool.getUserPets().find(new Document("_id", uuid)).first()));
 
-        bonuses.put("bonuses", Objects.requireNonNull(this.pool.getBonuses().find(new Document("_id", uuid)).first()));
+        user.setAkcesoriaPodstawowe(akcesoriaPodstawowe);
+        user.setAkcesoriaDodatkowe(akcesoriaDodatkowe);
+        user.setBony(bony);
+        user.setMagazynierUser(magazynierUser);
+        user.setBao(bao);
+        user.setBonuses(bonuses);
+        user.setDuszolog(duszolog);
+        user.setGornik(gornik);
+        //user.setHandlarz(handlarz);
+        user.setKolekcjoner(kolekcjoner);
+        user.setLesnik(lesnik);
+        user.setLowca(lowca);
+        user.setMedrzec(medrzec);
+        user.setMetinolog(metinolog);
+        user.setOs(os);
+        user.setPrzyrodnik(przyrodnik);
+        user.setRybak(rybak);
+        user.setWyslannik(wyslannik);
+        user.setWyszkolenie(wyszkolenie);
+        user.setPet(pet);
+        user.setUserPets(userPets);
 
-        final JSONObject npc = new JSONObject();
+        RpgApiApplication.getUserCacheManager().addUser(user);
+    }
 
-        npc.put("bao", Objects.requireNonNull(this.pool.getBao().find(new Document("_id", uuid)).first()));
-        npc.put("dodatki", Objects.requireNonNull(this.pool.getDodatki().find(new Document("_id", uuid)).first()));
-        npc.put("duszolog", Objects.requireNonNull(this.pool.getDuszolog().find(new Document("_id", uuid)).first()));
-        npc.put("gornik", Objects.requireNonNull(this.pool.getGornik().find(new Document("_id", uuid)).first()));
-        npc.put("handlarz", Objects.requireNonNull(this.pool.getHandlarz().find(new Document("_id", uuid)).first()));
-        //npc.put("klasy", Objects.requireNonNull(this.pool.getKlasy().find(new Document("_id", uuid)).first()));
-        npc.put("kociolki", Objects.requireNonNull(this.pool.getKociolki().find(new Document("_id", uuid)).first()));
-        npc.put("kolekcjoner", Objects.requireNonNull(this.pool.getKolekcjoner().find(new Document("_id", uuid)).first()));
-        npc.put("lesnik", Objects.requireNonNull(this.pool.getLesnik().find(new Document("_id", uuid)).first()));
-        npc.put("lowca", Objects.requireNonNull(this.pool.getLowca().find(new Document("_id", uuid)).first()));
-        npc.put("magazynier", Objects.requireNonNull(this.pool.getMagazynier().find(new Document("_id", uuid)).first()));
-        npc.put("medyk", Objects.requireNonNull(this.pool.getMedyk().find(new Document("_id", uuid)).first()));
-        npc.put("metinolog", Objects.requireNonNull(this.pool.getMetinolog().find(new Document("_id", uuid)).first()));
-        npc.put("przyrodnik", Objects.requireNonNull(this.pool.getPrzyrodnik().find(new Document("_id", uuid)).first()));
-        npc.put("rybak", Objects.requireNonNull(this.pool.getRybak().find(new Document("_id", uuid)).first()));
-        //npc.put("trener", Objects.requireNonNull(this.pool.getTrener().find(new Document("_id", uuid)).first()));
-        npc.put("wyslannik", Objects.requireNonNull(this.pool.getWyslannik().find(new Document("_id", uuid)).first()));
+    public String getProfile(final String token) {
+        final UUID uuid = this.getUUIDFromToken(token);
 
+        if (uuid == null) {
+            return new JSONObject().put("result", false).put("errorMessage", "invalid token").toString();
+        }
 
-
-        final JSONObject osiagniecia = new JSONObject();
-
-        osiagniecia.put("osiagniecia", Objects.requireNonNull(this.pool.getOsiagniecia().find(new Document("_id", uuid)).first()));
-
-
-        final JSONObject pety = new JSONObject();
-
-        pety.put("aktywny-zwierzak", Objects.requireNonNull(this.pool.getPety().find(new Document("_id", uuid)).first()));
-        pety.put("zwierzaki", Objects.requireNonNull(this.pool.getUserPets().find(new Document("_id", uuid)).first()));
-
-        bonuses.put("npc", npc);
-        json.put("bonuses", bonuses);
-        json.put("osiagniecia", osiagniecia);
-        json.put("pety", pety);
-
-        return json.toString();
+        return RpgApiApplication.getUserCacheManager().getUser(uuid).toDocument().append("klan", this.checkIfPlayerIsInGuild(uuid.toString())).toString();
     }
 
     private String checkIfPlayerIsInGuild(final String uuid) {
@@ -156,32 +166,15 @@ public class MongoManager {
         return "Brak Klanu";
     }
 
-    private JSONObject parsePunishmentHistoryToJSON(final String punishmentHistory) {
-        final JSONObject json = new JSONObject();
-        int count = 1;
-        for (String s : punishmentHistory.split(",")) {
-            final String[] punishment = s.split(";");
-            final JSONObject punishmentJSON = new JSONObject();
-
-            punishmentJSON.put("type", punishment[0]);
-
-            if (punishment.length == 3) {
-                punishmentJSON.put("adminNick", punishment[1]);
-                punishmentJSON.put("date", punishment[2]);
-            } else if (punishment.length == 4) {
-                punishmentJSON.put("adminNick", punishment[1]);
-                punishmentJSON.put("reason", punishment[2]);
-                punishmentJSON.put("punishmentDate", punishment[3]);
-            } else if (punishment.length == 5) {
-                punishmentJSON.put("adminNick", punishment[1]);
-                punishmentJSON.put("reason", punishment[2]);
-                punishmentJSON.put("expiresAt", punishment[3]);
-                punishmentJSON.put("punishmentDate", punishment[4]);
+    public UUID getUUIDFromToken(final String token) {
+        for (final Document document : this.pool.getWWWTokens().find()) {
+            if (document.getString("token").equals(token)) {
+                if (document.getLong("expire") <= System.currentTimeMillis()) {
+                    return null;
+                }
+                return UUID.fromString(document.getString("_id"));
             }
-
-            json.put("Punishment - " + count, punishmentJSON);
-            count++;
         }
-        return json;
+        return null;
     }
 }

@@ -3,6 +3,7 @@ package rpg.rpgapi.cache;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import rpg.rpgapi.RpgApiApplication;
 import rpg.rpgapi.objects.User;
 
 import java.util.UUID;
@@ -25,6 +26,9 @@ public class UserCacheManager {
     }
 
     public User getUser(final UUID uuid) {
+        if (!hasUser(uuid)) {
+            RpgApiApplication.getMongoManager().initProfile(uuid);
+        }
         return USER_CACHE.asMap().get(uuid);
     }
 

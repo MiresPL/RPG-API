@@ -10,21 +10,15 @@ import java.util.ArrayList;
 
 public class MongoConnectionPoolManager {
 
-    private final MongoClient client;
-
     private final MongoCollection<Document> hellrpg_gracze;
     private final MongoCollection<Document> hellrpg_gildie;
     private final MongoCollection<Document> hellrpg_dodatki;
-    private final MongoCollection<Document> hellrpg_targi;
     private final MongoCollection<Document> hellrpg_osiagniecia;
     private final MongoCollection<Document> hellrpg_bao;
     private final MongoCollection<Document> hellrpg_rybak;
     private final MongoCollection<Document> hellrpg_kolekcjoner;
     private final MongoCollection<Document> hellrpg_magazynier;
-    private final MongoCollection<Document> hellrpg_trener;
     private final MongoCollection<Document> hellrpg_metinolog;
-    private final MongoCollection<Document> hellrpg_other;
-    private final MongoCollection<Document> hellrpg_klasy;
     private final MongoCollection<Document> hellrpg_medyk;
     private final MongoCollection<Document> hellrpg_gornik;
     private final MongoCollection<Document> hellrpg_duszolog;
@@ -36,15 +30,15 @@ public class MongoConnectionPoolManager {
     private final MongoCollection<Document> hellrpg_userPets;
     private final MongoCollection<Document> hellrpg_wyslannik;
     //private final MongoCollection<Document> hellrpg_przykladowyNPC; // TU TWORZYSZ ZMIENNA DO KOLEKCJI ZEBY MOC SIE DO NIEJ ODOWLAC !!!!
-    private final MongoCollection<Document> hellrpg_kociolki;
-    private final MongoCollection<Document> hellrpg_serwerWhiteList;
-    private final MongoCollection<Document> hellrpg_artefaktyZaLvL;
     private final MongoCollection<Document> hellrpg_handlarz;
+    private final MongoCollection<Document> hellrpg_wyszkolenie;
+
+    private final MongoCollection<Document> hellrpg_www_tokens;
 
 
     public MongoConnectionPoolManager() {
-        this.client = MongoClients.create("mongodb://localhost/minecraft"); //mongodb://u7id5em5uspjam4butns:3ws4TKngK0iIgoE0lMSY@n1-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017,n2-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017/biyowrjyqcvr1sa?replicaSet=rs0
-        MongoDatabase database = this.client.getDatabase("minecraft");
+        final MongoClient client = MongoClients.create("mongodb://localhost/minecraft"); //mongodb://u7id5em5uspjam4butns:3ws4TKngK0iIgoE0lMSY@n1-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017,n2-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017/biyowrjyqcvr1sa?replicaSet=rs0
+        final MongoDatabase database = client.getDatabase("minecraft");
         final ArrayList<String> collections = database.listCollectionNames().into(new ArrayList<>());
         if (!collections.contains("hellrpg_gracze")) {
             database.createCollection("hellrpg_gracze");
@@ -57,9 +51,6 @@ public class MongoConnectionPoolManager {
         }
         if (!collections.contains("hellrpg_magazyny")) {
             database.createCollection("hellrpg_magazyny");
-        }
-        if (!collections.contains("hellrpg_targi")) {
-            database.createCollection("hellrpg_targi");
         }
         if (!collections.contains("hellrpg_osiagniecia")) {
             database.createCollection("hellrpg_osiagniecia");
@@ -76,17 +67,8 @@ public class MongoConnectionPoolManager {
         if (!collections.contains("hellrpg_magazynier")) {
             database.createCollection("hellrpg_magazynier");
         }
-        if (!collections.contains("hellrpg_trener")) {
-            database.createCollection("hellrpg_trener");
-        }
         if (!collections.contains("hellrpg_metinolog")) {
             database.createCollection("hellrpg_metinolog");
-        }
-        if (!collections.contains("hellrpg_other")) {
-            database.createCollection("hellrpg_other");
-        }
-        if (!collections.contains("hellrpg_klasy")) {
-            database.createCollection("hellrpg_klasy");
         }
         if (!collections.contains("hellrpg_medyk")) {
             database.createCollection("hellrpg_medyk");
@@ -118,17 +100,14 @@ public class MongoConnectionPoolManager {
         if (!collections.contains("hellrpg_wyslannik")) {
             database.createCollection("hellrpg_wyslannik");
         }
-        if (!collections.contains("hellrpg_kociolki")) {
-            database.createCollection("hellrpg_kociolki");
-        }
-        if (!collections.contains("hellrpg_serwerWhiteList")) {
-            database.createCollection("hellrpg_serwerWhiteList");
-        }
-        if (!collections.contains("hellrpg_artefaktyZaLvL")) {
-            database.createCollection("hellrpg_artefaktyZaLvL");
-        }
         if (!collections.contains("hellrpg_handlarz")) {
             database.createCollection("hellrpg_handlarz");
+        }
+        if (!collections.contains("hellrpg_wyszkolenie")) {
+            database.createCollection("hellrpg_wyszkolenie");
+        }
+        if (!collections.contains("hellrpg_www_tokens")) {
+            database.createCollection("hellrpg_www_tokens");
         }
         // TU TWORZYSZ KOLEKCJE JESLI JEJ NIE MA W BAZIE DANYCH (TAKA SZUFLADA NA UZYTKOWNIKOW)
         /*if (!collections.contains("hellrpg_przykladowyNPC")) {
@@ -137,16 +116,12 @@ public class MongoConnectionPoolManager {
         this.hellrpg_gracze = database.getCollection("hellrpg_gracze");
         this.hellrpg_gildie = database.getCollection("hellrpg_gildie");
         this.hellrpg_dodatki = database.getCollection("hellrpg_dodatki");
-        this.hellrpg_targi = database.getCollection("hellrpg_targi");
         this.hellrpg_osiagniecia = database.getCollection("hellrpg_osiagniecia");
         this.hellrpg_bao = database.getCollection("hellrpg_bao");
         this.hellrpg_rybak = database.getCollection("hellrpg_rybak");
         this.hellrpg_kolekcjoner = database.getCollection("hellrpg_kolekcjoner");
         this.hellrpg_magazynier = database.getCollection("hellrpg_magazynier");
-        this.hellrpg_trener = database.getCollection("hellrpg_trener");
         this.hellrpg_metinolog = database.getCollection("hellrpg_metinolog");
-        this.hellrpg_other = database.getCollection("hellrpg_other");
-        this.hellrpg_klasy = database.getCollection("hellrpg_klasy");
         this.hellrpg_medyk = database.getCollection("hellrpg_medyk");
         this.hellrpg_gornik = database.getCollection("hellrpg_gornik");
         this.hellrpg_duszolog = database.getCollection("hellrpg_duszolog");
@@ -157,10 +132,9 @@ public class MongoConnectionPoolManager {
         this.hellrpg_pety = database.getCollection("hellrpg_pety");
         this.hellrpg_userPets = database.getCollection("hellrpg_userPets");
         this.hellrpg_wyslannik = database.getCollection("hellrpg_wyslannik");
-        this.hellrpg_kociolki = database.getCollection("hellrpg_kociolki");
-        this.hellrpg_serwerWhiteList = database.getCollection("hellrpg_serwerWhiteList");
-        this.hellrpg_artefaktyZaLvL = database.getCollection("hellrpg_artefaktyZaLvL");
         this.hellrpg_handlarz = database.getCollection("hellrpg_handlarz");
+        this.hellrpg_wyszkolenie = database.getCollection("hellrpg_wyszkolenie");
+        this.hellrpg_www_tokens = database.getCollection("hellrpg_www_tokens");
         // TU PRZYPISUJESZ KOLEKCJE DO ZMIENNEJ
         //this.hellrpg_przykladowyNPC = database.getCollection("hellrpg_przykladowyNPC");
         System.out.println("Connected to database!");
@@ -174,9 +148,6 @@ public class MongoConnectionPoolManager {
     }
     public MongoCollection<Document> getDodatki() {
         return this.hellrpg_dodatki;
-    }
-    public MongoCollection<Document> getTargi() {
-        return this.hellrpg_targi;
     }
     public MongoCollection<Document> getOsiagniecia() {
         return this.hellrpg_osiagniecia;
@@ -193,17 +164,8 @@ public class MongoConnectionPoolManager {
     public MongoCollection<Document> getMagazynier() {
         return this.hellrpg_magazynier;
     }
-    public MongoCollection<Document> getTrener() {
-        return this.hellrpg_trener;
-    }
     public MongoCollection<Document> getMetinolog() {
         return this.hellrpg_metinolog;
-    }
-    public MongoCollection<Document> getOther() {
-        return this.hellrpg_other;
-    }
-    public MongoCollection<Document> getKlasy() {
-        return this.hellrpg_klasy;
     }
     public MongoCollection<Document> getMedyk() {
         return this.hellrpg_medyk;
@@ -235,17 +197,12 @@ public class MongoConnectionPoolManager {
     public MongoCollection<Document> getWyslannik() {
         return this.hellrpg_wyslannik;
     }
-    public MongoCollection<Document> getKociolki() {
-        return this.hellrpg_kociolki;
+    public MongoCollection<Document> getWyszkolenie() {
+        return hellrpg_wyszkolenie;
     }
-    public MongoCollection<Document> getSerwerWhiteList() {
-        return this.hellrpg_serwerWhiteList;
-    }
-    public MongoCollection<Document> getArtefaktyZaLvL() {
-        return this.hellrpg_artefaktyZaLvL;
-    }
-    public MongoCollection<Document> getHandlarz() {
-        return hellrpg_handlarz;
+
+    public MongoCollection<Document> getWWWTokens() {
+        return hellrpg_www_tokens;
     }
 
     // TU ROBISZ MOZWLIOSC ODWOLANIA SIE DO KOLEKCJI
@@ -253,7 +210,4 @@ public class MongoConnectionPoolManager {
         return hellrpg_przykladowyNPC;
     }*/
 
-    public void closePool() {
-        this.client.close();
-    }
 }
