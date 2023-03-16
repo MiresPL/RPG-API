@@ -1,6 +1,11 @@
 package rpg.rpgapi.database;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.mongodb.MongoException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.bson.Document;
 import org.json.JSONObject;
 import rpg.rpgapi.RpgApiApplication;
@@ -14,6 +19,8 @@ import rpg.rpgapi.objects.pety.UserPets;
 import rpg.rpgapi.objects.wyszkolenie.Wyszkolenie;
 
 
+import java.security.Key;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,69 +39,57 @@ public class MongoManager {
                 final String password = document.getString("hellCode");
 
                 if (password.isEmpty()) {
-                    json.put("result", "false");
+                    json.put("result", false);
                     json.put("errorMessage", "no password is set");
                     return json.toString();
                 }
 
                 if (password.equals("off")) {
-                    json.put("result", "false");
+                    json.put("result", false);
                     json.put("errorMessage", "password is off");
                     return json.toString();
                 }
 
-                if (!document.getString("rankName").equals("GRACZ")) {
-                    if (password.equals(code)) {
-                        json.put("result", "true");
-                        json.put("uuid", document.getString("_id"));
-                        json.put("nick", document.getString("name"));
-                        return json.toString();
-                    }
-
-                    final String adminPassword = document.getString("adminCode");
-
-                    if (adminPassword.isEmpty()) {
-                        json.put("result", "false");
-                        json.put("errorMessage", "no admin password is set");
-                        return json.toString();
-                    }
-
-                    if (adminPassword.equals(code)) {
-                        json.put("result", "true");
-                        json.put("uuid", document.getString("_id"));
-                        json.put("nick", document.getString("name"));
-                        return json.toString();
-                    } else {
-                        json.put("result", "false");
-                        json.put("errorMessage", "wrong admin password");
-                        return json.toString();
-                    }
-                }
-
                 if (password.equals(code)) {
-                    json.put("result", "true");
+                    json.put("result", true);
                     json.put("uuid", document.getString("_id"));
-                    json.put("nick", document.getString("name"));
-                    return json.toString();
+                    final String token = generateToken(document.getString("_id"));
+                    json.put("token", token);
+                    DecodedJWT decodedJWT = JWT.decode(token);
+                    final JSONObject pushTokenResponse = this.pushToken(document.getString("_id"), token, decodedJWT.getExpiresAt().getTime());
+                    return json.put("tokenResponse", pushTokenResponse).toString();
                 } else {
-                    json.put("result", "false");
+                    json.put("result", false);
                     json.put("errorMessage", "wrong password");
                     return json.toString();
                 }
             }
         }
 
-        json.put("result", "false");
+        json.put("result", false);
         json.put("errorMessage", "no user in database");
         return json.toString();
     }
 
-    public String pushToken(final String uuid, final String token) {
+    private String generateToken(final String uuid) {
+        final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        final long expirationTime = 3600 * 1000 * 2;
+
+
+        return Jwts.builder()
+                .setSubject(uuid)
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(key)
+                .compact();
+
+    }
+
+    public JSONObject pushToken(final String uuid, final String token, final long expire) {
         try {
-            this.pool.getWWWTokens().insertOne(new Document("_id", uuid).append("token", token).append("expire", System.currentTimeMillis() + 7_200_000));
-            return new JSONObject().put("result", "true").toString();
+            this.pool.getWWWTokens().insertOne(new Document("_id", uuid).append("token", token).append("expire", expire));
+            return new JSONObject().put("result", true);
         } catch (final MongoException e) {
-            return new JSONObject().put("result", "false").toString();
+            return new JSONObject().put("result", false);
         }
     }
 
@@ -148,7 +143,13 @@ public class MongoManager {
     }
 
     public String getProfile(final String token) {
+        //TODO ZROBIC SPRAWDZANIE WAZNOSCI TOKENU ORAZ SAMEGO TOKENU Z BAZA
         final UUID uuid = this.getUUIDFromToken(token);
+
+        /*
+        DecodedJWT decodedJWT = JWT.decode(token);
+        long expirationTimeInSeconds = decodedJWT.getExpiresAt().getTime() / 1000; // Get expiration time in seconds
+         */
 
         if (uuid == null) {
             return new JSONObject().put("result", false).put("errorMessage", "invalid token").toString();
