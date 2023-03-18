@@ -74,8 +74,6 @@ public class MongoManager {
     private String generateToken(final String uuid) {
         final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         final long expirationTime = 3600 * 1000 * 2;
-
-
         return Jwts.builder()
                 .setSubject(uuid)
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
@@ -177,5 +175,35 @@ public class MongoManager {
             }
         }
         return null;
+    }
+
+    public JSONObject checkTokenAndUUID(final String uuid, final String token) {
+        for (final Document document : this.pool.getWWWTokens().find()) {
+            if (document.getString("_id").equals(uuid)) {
+                if (document.getString("token").equals(token)) {
+                    if (document.getLong("expire") <= System.currentTimeMillis()) {
+                        final String newToken = this.generateToken(uuid);
+                        return new JSONObject().put("result", false).put("errorMessage", "token expired").put("newToken", newToken).put("newTokenResponse", this.pushToken(uuid, token, JWT.decode(newToken).getExpiresAt().getTime()));
+                    }
+                    return new JSONObject().put("result", true);
+                } else {
+                    return new JSONObject().put("result", false).put("errorMessage", "invalid token");
+                }
+            }
+        }
+        return new JSONObject().put("result", false).put("errorMessage", "token not found");
+    }
+
+    public String getNick(final String uuid, final String token) {
+        final JSONObject response = this.checkTokenAndUUID(uuid, token);
+
+        if (response.getBoolean("result")) {
+            return new JSONObject().put("result", true).put("nick", Objects.requireNonNull(this.pool.getGracze().find(new Document("_id", uuid)).first()).getString("name")).toString();
+        } else {
+            if (response.keySet().contains("newToken") && response.keySet().contains("newTokenResponse")) {
+                return new JSONObject().put("result", true).put("nick", Objects.requireNonNull(this.pool.getGracze().find(new Document("_id", uuid)).first()).getString("name")).toString();
+            }
+            return response.toString();
+        }
     }
 }
