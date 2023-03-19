@@ -3,6 +3,7 @@ package rpg.rpgapi.objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -24,13 +25,13 @@ public class Lesnik {
         this.cooldown = document.getLong("cooldown");
     }
 
-    public Document toDocument() {
-        return new Document("_id", uuid.toString())
-                .append("mission", getMission())
-                .append("progress", getProgress())
-                .append("przeszycie", getPrzeszycie())
-                .append("wzmKryta", getWzmKryta())
-                .append("defNaLudzi", getDefNaLudzi())
-                .append("cooldown", getCooldown());
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("mission", getMission())
+                .put("progress", getProgress())
+                .put("przeszycie", getPrzeszycie())
+                .put("wzmKryta", getWzmKryta())
+                .put("defNaLudzi", getDefNaLudzi())
+                .put("cooldown", getCooldown());
     }
 }

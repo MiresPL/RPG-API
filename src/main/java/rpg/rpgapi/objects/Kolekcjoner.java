@@ -3,6 +3,7 @@ package rpg.rpgapi.objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,12 +26,12 @@ public class Kolekcjoner {
         this.defNaLudzi = document.getDouble("defNaLudzi");
     }
 
-    public Document toDocument() {
-        return new Document("_id", this.uuid.toString())
-                .append("mission", getMission())
-                .append("missionProgress", getMissionProgress())
-                .append("szczescie", getSzczescie())
-                .append("silnyNaLudzi", getSilnyNaLudzi())
-                .append("defNaLudzi", getDefNaLudzi());
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("mission", getMission())
+                .put("missionProgress", getMissionProgress())
+                .put("szczescie", getSzczescie())
+                .put("silnyNaLudzi", getSilnyNaLudzi())
+                .put("defNaLudzi", getDefNaLudzi());
     }
 }

@@ -3,6 +3,7 @@ package rpg.rpgapi.objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -42,31 +43,31 @@ public class Os {
         this.dungeonyProgress = document.getInteger("dungeonyProgress");
     }
 
-    public Document toDocument() {
-        return new Document("_id", this.uuid.toString())
-                .append("gracze", this.gracze)
-                .append("moby", this.moby)
-                .append("metiny", this.metiny)
-                .append("skrzynki", this.skrzynki)
-                .append("niesy", this.niesy)
-                .append("ulepszenia", this.ulepszenia)
-                .append("drwal", this.drwal)
-                .append("rybak", this.rybak)
-                .append("gornik", this.gornik)
-                .append("czas", this.czas)
-                .append("krysztaly", this.krysztaly)
-                .append("dungeony", this.dungeony)
-                .append("graczeProgress", this.graczeProgress)
-                .append("mobyProgress", this.mobyProgress)
-                .append("metinyProgress", this.metinyProgress)
-                .append("skrzynkiProgress", this.skrzynkiProgress)
-                .append("niesyProgress", this.niesyProgress)
-                .append("ulepszeniaProgress", this.ulepszeniaProgress)
-                .append("drwalProgress", this.drwalProgress)
-                .append("rybakProgress", this.rybakProgress)
-                .append("gornikProgress", this.gornikProgress)
-                .append("czasProgress", this.czasProgress)
-                .append("krysztalyProgress", this.krysztalyProgress)
-                .append("dungeonyProgress", this.dungeonyProgress);
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("gracze", this.gracze)
+                .put("moby", this.moby)
+                .put("metiny", this.metiny)
+                .put("skrzynki", this.skrzynki)
+                .put("niesy", this.niesy)
+                .put("ulepszenia", this.ulepszenia)
+                .put("drwal", this.drwal)
+                .put("rybak", this.rybak)
+                .put("gornik", this.gornik)
+                .put("czas", this.czas)
+                .put("krysztaly", this.krysztaly)
+                .put("dungeony", this.dungeony)
+                .put("graczeProgress", this.graczeProgress)
+                .put("mobyProgress", this.mobyProgress)
+                .put("metinyProgress", this.metinyProgress)
+                .put("skrzynkiProgress", this.skrzynkiProgress)
+                .put("niesyProgress", this.niesyProgress)
+                .put("ulepszeniaProgress", this.ulepszeniaProgress)
+                .put("drwalProgress", this.drwalProgress)
+                .put("rybakProgress", this.rybakProgress)
+                .put("gornikProgress", this.gornikProgress)
+                .put("czasProgress", this.czasProgress)
+                .put("krysztalyProgress", this.krysztalyProgress)
+                .put("dungeonyProgress", this.dungeonyProgress);
     }
 }

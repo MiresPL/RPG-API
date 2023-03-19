@@ -3,6 +3,7 @@ package rpg.rpgapi.objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -41,7 +42,7 @@ public class Bonuses {
         this.szczescie = document.getInteger("szczescie");
         this.szybkosc = document.getInteger("szybkosc");
         this.spowolnienie = document.getDouble("spowolnienie");
-        this.dodatkowyExp = document.getInteger("dodatkowyExp");
+        this.dodatkowyExp = document.getDouble("dodatkowyExp");
         this.oslepienie = document.getDouble("oslepienie");
         this.przebiciePancerza = document.getDouble("przebiciePancerza");
         this.wampiryzm = document.getDouble("wampiryzm");
@@ -49,37 +50,37 @@ public class Bonuses {
         this.dmgMetiny = document.getInteger("dmgMetiny");
     }
 
-    public Document toDocument() {
-        return new Document("_id", this.uuid.toString())
-                .append("dodatkowehp", getDodatkowehp())
-                .append("dodatkowezlotehp", getDodatkowezlotehp())
-                .append("dodatkoweobrazenia", getDodatkoweobrazenia())
-                .append("truedamage", getTruedamage())
-                .append("srednieobrazenia", getSrednieobrazenia())
-                .append("silnynaludzi", getSilnynaludzi())
-                .append("silnynapotwory", getSilnynapotwory())
-                .append("sredniadefensywa", getSredniadefensywa())
-                .append("defnaludzi", getDefnaludzi())
-                .append("defnamoby", getDefnamoby())
-                .append("szansanakryta", getSzansanakryta())
-                .append("szansanawzmocnieniekryta", getSzansanawzmocnieniekryta())
-                .append("blokciosu", getBlokciosu())
-                .append("przeszyciebloku", getPrzeszyciebloku())
-                .append("szansanakrwawienie", getSzansanakrwawienie())
-                .append("minussrednieobrazenia", getMinussrednieobrazenia())
-                .append("minussredniadefensywa", getMinussredniadefensywa())
-                .append("minusdefnaludzi", getMinusdefnaludzi())
-                .append("minusdefnamoby", getMinusdefnamoby())
-                .append("minusobrazenianaludzi", getMinusobrazenianaludzi())
-                .append("minusobrazenianamoby", getMinusobrazenianamoby())
-                .append("szczescie", getSzczescie())
-                .append("szybkosc", getSzybkosc())
-                .append("spowolnienie", getSpowolnienie())
-                .append("dodatkowyExp", getDodatkowyExp())
-                .append("oslepienie", getOslepienie())
-                .append("przebiciePancerza", getPrzebiciePancerza())
-                .append("wampiryzm", getWampiryzm())
-                .append("wzmocnienieKryta", getWzmocnienieKryta())
-                .append("dmgMetiny", getDmgMetiny());
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("dodatkowehp", getDodatkowehp())
+                .put("dodatkowezlotehp", getDodatkowezlotehp())
+                .put("dodatkoweobrazenia", getDodatkoweobrazenia())
+                .put("truedamage", getTruedamage())
+                .put("srednieobrazenia", getSrednieobrazenia())
+                .put("silnynaludzi", getSilnynaludzi())
+                .put("silnynapotwory", getSilnynapotwory())
+                .put("sredniadefensywa", getSredniadefensywa())
+                .put("defnaludzi", getDefnaludzi())
+                .put("defnamoby", getDefnamoby())
+                .put("szansanakryta", getSzansanakryta())
+                .put("szansanawzmocnieniekryta", getSzansanawzmocnieniekryta())
+                .put("blokciosu", getBlokciosu())
+                .put("przeszyciebloku", getPrzeszyciebloku())
+                .put("szansanakrwawienie", getSzansanakrwawienie())
+                .put("minussrednieobrazenia", getMinussrednieobrazenia())
+                .put("minussredniadefensywa", getMinussredniadefensywa())
+                .put("minusdefnaludzi", getMinusdefnaludzi())
+                .put("minusdefnamoby", getMinusdefnamoby())
+                .put("minusobrazenianaludzi", getMinusobrazenianaludzi())
+                .put("minusobrazenianamoby", getMinusobrazenianamoby())
+                .put("szczescie", getSzczescie())
+                .put("szybkosc", getSzybkosc())
+                .put("spowolnienie", getSpowolnienie())
+                .put("dodatkowyExp", getDodatkowyExp())
+                .put("oslepienie", getOslepienie())
+                .put("przebiciePancerza", getPrzebiciePancerza())
+                .put("wampiryzm", getWampiryzm())
+                .put("wzmocnienieKryta", getWzmocnienieKryta())
+                .put("dmgMetiny", getDmgMetiny());
     }
 }

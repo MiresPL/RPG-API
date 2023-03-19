@@ -3,6 +3,7 @@ package rpg.rpgapi.objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -28,14 +29,14 @@ public class Wyslannik {
         this.openChestMissionProgress = document.getInteger("openChestMissionProgress");
     }
 
-    public Document toDocument() {
-        return new Document("_id", uuid.toString())
-                .append("killMobsMission", getKillMobsMission())
-                .append("killMobsMissionProgress", getKillMobsMissionProgress())
-                .append("killBossMission", getKillBossMission())
-                .append("killBossMissionProgress", getKillBossMissionProgress())
-                .append("openChestMission", getOpenChestMission())
-                .append("openChestMissionProgress", getOpenChestMissionProgress());
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("killMobsMission", getKillMobsMission())
+                .put("killMobsMissionProgress", getKillMobsMissionProgress())
+                .put("killBossMission", getKillBossMission())
+                .put("killBossMissionProgress", getKillBossMissionProgress())
+                .put("openChestMission", getOpenChestMission())
+                .put("openChestMissionProgress", getOpenChestMissionProgress());
     }
 
 }

@@ -3,6 +3,7 @@ package rpg.rpgapi.objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -56,43 +57,43 @@ public class Gornik {
         this.d9_2 = document.getBoolean("d9_2");
     }
 
-    public Document toDocument() {
-        return new Document("_id", this.uuid.toString())
-                .append("mission", getMission())
-                .append("progress", getProgress())
-                .append("sredniaOdpornosc", getSredniaOdpornosc())
-                .append("blokCiosu", getBlokCiosu())
-                .append("przeszycieBloku", getPrzeszycieBloku())
-                .append("dalszeDone", isDalszeDone())
-                .append("d1", isD1())
-                .append("d2", isD2())
-                .append("d3_1", isD3_1())
-                .append("d3_2", isD3_2())
-                .append("d3_3", isD3_3())
-                .append("d4_1", isD4_1())
-                .append("d4_2", isD4_2())
-                .append("d4_3", isD4_3())
-                .append("d4_4", isD4_4())
-                .append("d4_5", isD4_5())
-                .append("d4_6", isD4_6())
-                .append("d4_7", isD4_7())
-                .append("d5_1", isD5_1())
-                .append("d5_2", isD5_2())
-                .append("d5_3", isD5_3())
-                .append("d5_4", isD5_4())
-                .append("d5_5", isD5_5())
-                .append("d6_1", isD6_1())
-                .append("d6_2", isD6_2())
-                .append("d6_3", isD6_3())
-                .append("d6_4", isD6_4())
-                .append("d6_5", isD6_5())
-                .append("d7_1", isD7_1())
-                .append("d7_2", isD7_2())
-                .append("d7_3", isD7_3())
-                .append("d7_4", isD7_4())
-                .append("d8_1", isD8_1())
-                .append("d8_2", isD8_2())
-                .append("d9_1", isD9_1())
-                .append("d9_2", isD9_2());
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("mission", getMission())
+                .put("progress", getProgress())
+                .put("sredniaOdpornosc", getSredniaOdpornosc())
+                .put("blokCiosu", getBlokCiosu())
+                .put("przeszycieBloku", getPrzeszycieBloku())
+                .put("dalszeDone", isDalszeDone())
+                .put("d1", isD1())
+                .put("d2", isD2())
+                .put("d3_1", isD3_1())
+                .put("d3_2", isD3_2())
+                .put("d3_3", isD3_3())
+                .put("d4_1", isD4_1())
+                .put("d4_2", isD4_2())
+                .put("d4_3", isD4_3())
+                .put("d4_4", isD4_4())
+                .put("d4_5", isD4_5())
+                .put("d4_6", isD4_6())
+                .put("d4_7", isD4_7())
+                .put("d5_1", isD5_1())
+                .put("d5_2", isD5_2())
+                .put("d5_3", isD5_3())
+                .put("d5_4", isD5_4())
+                .put("d5_5", isD5_5())
+                .put("d6_1", isD6_1())
+                .put("d6_2", isD6_2())
+                .put("d6_3", isD6_3())
+                .put("d6_4", isD6_4())
+                .put("d6_5", isD6_5())
+                .put("d7_1", isD7_1())
+                .put("d7_2", isD7_2())
+                .put("d7_3", isD7_3())
+                .put("d7_4", isD7_4())
+                .put("d8_1", isD8_1())
+                .put("d8_2", isD8_2())
+                .put("d9_1", isD9_1())
+                .put("d9_2", isD9_2());
     }
 }

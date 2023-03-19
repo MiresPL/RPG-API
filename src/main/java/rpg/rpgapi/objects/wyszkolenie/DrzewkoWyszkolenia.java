@@ -3,6 +3,7 @@ package rpg.rpgapi.objects.wyszkolenie;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 @Getter
 public class DrzewkoWyszkolenia {
@@ -44,25 +45,25 @@ public class DrzewkoWyszkolenia {
         this.dg3 = new DG3(document.get("dg3", Document.class));
     }
 
-    public Document toDocument() {
-        return new Document("_id", "drzewkoWyszkolenia")
-                .append("d1", this.d1.toDocument())
-                .append("d2", this.d2.toDocument())
-                .append("dl1", this.dl1.toDocument())
-                .append("dl2", this.dl2.toDocument())
-                .append("dl3", this.dl3.toDocument())
-                .append("dl4", this.dl4.toDocument())
-                .append("dl5", this.dl5.toDocument())
-                .append("dl6", this.dl6.toDocument())
-                .append("dp1", this.dp1.toDocument())
-                .append("dp2", this.dp2.toDocument())
-                .append("dp3", this.dp3.toDocument())
-                .append("dp4", this.dp4.toDocument())
-                .append("dp5", this.dp5.toDocument())
-                .append("dp6", this.dp6.toDocument())
-                .append("dg1", this.dg1.toDocument())
-                .append("dg2", this.dg2.toDocument())
-                .append("dg3", this.dg3.toDocument());
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("d1", this.d1.toDocument())
+                .put("d2", this.d2.toDocument())
+                .put("dl1", this.dl1.toDocument())
+                .put("dl2", this.dl2.toDocument())
+                .put("dl3", this.dl3.toDocument())
+                .put("dl4", this.dl4.toDocument())
+                .put("dl5", this.dl5.toDocument())
+                .put("dl6", this.dl6.toDocument())
+                .put("dp1", this.dp1.toDocument())
+                .put("dp2", this.dp2.toDocument())
+                .put("dp3", this.dp3.toDocument())
+                .put("dp4", this.dp4.toDocument())
+                .put("dp5", this.dp5.toDocument())
+                .put("dp6", this.dp6.toDocument())
+                .put("dg1", this.dg1.toDocument())
+                .put("dg2", this.dg2.toDocument())
+                .put("dg3", this.dg3.toDocument());
     }
 
 
@@ -84,11 +85,11 @@ public class DrzewkoWyszkolenia {
             this.srDmg = document.getDouble("srDmg");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "D1")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("srDmg", this.srDmg);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("srDmg", this.srDmg);
         }
     }
 
@@ -110,11 +111,11 @@ public class DrzewkoWyszkolenia {
             this.szczescie = document.getInteger("szczescie");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "D2")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("szczescie", this.szczescie);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("szczescie", this.szczescie);
         }
     }
 
@@ -136,11 +137,11 @@ public class DrzewkoWyszkolenia {
             this.hp = document.getInteger("hp");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DP1")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("hp", this.hp);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("hp", this.hp);
         }
     }
 
@@ -162,11 +163,11 @@ public class DrzewkoWyszkolenia {
             this.dodatkowyDmg = document.getInteger("dodatkowyDmg");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DP2")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("dodatkowyDmg", this.dodatkowyDmg);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("dodatkowyDmg", this.dodatkowyDmg);
         }
     }
 
@@ -188,11 +189,11 @@ public class DrzewkoWyszkolenia {
             this.silnyNaMoby = document.getDouble("silnyNaMoby");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DP3")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("silnyNaMoby", this.silnyNaMoby);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("silnyNaMoby", this.silnyNaMoby);
         }
     }
 
@@ -214,11 +215,11 @@ public class DrzewkoWyszkolenia {
             this.odpornoscNaGraczy = document.getDouble("odpornoscNaGraczy");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DP4")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("odpornoscNaGraczy", this.odpornoscNaGraczy);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("odpornoscNaGraczy", this.odpornoscNaGraczy);
         }
     }
 
@@ -240,11 +241,11 @@ public class DrzewkoWyszkolenia {
             this.szczescie = document.getInteger("szczescie");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DP5")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("szczescie", this.szczescie);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("szczescie", this.szczescie);
         }
     }
 
@@ -266,11 +267,11 @@ public class DrzewkoWyszkolenia {
             this.srDef = document.getDouble("srDef");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DP6")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("srDef", this.srDef);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("srDef", this.srDef);
         }
     }
 
@@ -292,11 +293,11 @@ public class DrzewkoWyszkolenia {
             this.odpornoscNaMoby = document.getDouble("odpornoscNaMoby");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DG1")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("odpornoscNaMoby", this.odpornoscNaMoby);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("odpornoscNaMoby", this.odpornoscNaMoby);
         }
     }
 
@@ -318,11 +319,11 @@ public class DrzewkoWyszkolenia {
             this.przeszywka = document.getDouble("przeszywka");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DG2")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("przeszywka", this.przeszywka);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("przeszywka", this.przeszywka);
         }
     }
 
@@ -344,11 +345,11 @@ public class DrzewkoWyszkolenia {
             this.blok = document.getDouble("blok");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DG3")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("blok", this.blok);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("blok", this.blok);
         }
     }
 
@@ -370,11 +371,11 @@ public class DrzewkoWyszkolenia {
             this.krytyk = document.getDouble("krytyk");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DL1")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("krytyk", this.krytyk);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("krytyk", this.krytyk);
         }
     }
 
@@ -396,11 +397,11 @@ public class DrzewkoWyszkolenia {
             this.srDef = document.getDouble("srDef");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DL2")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("srDef", this.srDef);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("srDef", this.srDef);
         }
     }
 
@@ -422,11 +423,11 @@ public class DrzewkoWyszkolenia {
             this.silnyNaLudzi = document.getDouble("silnyNaLudzi");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DL3")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("silnyNaLudzi", this.silnyNaLudzi);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("silnyNaLudzi", this.silnyNaLudzi);
         }
     }
 
@@ -448,11 +449,11 @@ public class DrzewkoWyszkolenia {
             this.blok = document.getDouble("blok");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DL4")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("blok", this.blok);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("blok", this.blok);
         }
     }
 
@@ -474,11 +475,11 @@ public class DrzewkoWyszkolenia {
             this.hp = document.getInteger("hp");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DL5")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("hp", this.hp);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("hp", this.hp);
         }
     }
 
@@ -500,11 +501,11 @@ public class DrzewkoWyszkolenia {
             this.srDmg = document.getDouble("srDmg");
         }
 
-        public Document toDocument() {
-            return new Document("_id", "DL6")
-                    .append("unlocked", this.unlocked)
-                    .append("upgradeLvl", this.upgradeLvl)
-                    .append("srDmg", this.srDmg);
+        public JSONObject toDocument() {
+            return new JSONObject()
+                    .put("unlocked", this.unlocked)
+                    .put("upgradeLvl", this.upgradeLvl)
+                    .put("srDmg", this.srDmg);
         }
     }
 }

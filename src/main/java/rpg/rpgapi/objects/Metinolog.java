@@ -3,6 +3,7 @@ package rpg.rpgapi.objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -29,14 +30,14 @@ public class Metinolog {
         this.dodatkowedmg = document.getInteger("dodatkowedmg");
     }
 
-    public Document toDocument() {
-        return new Document("_id", this.uuid.toString())
-                .append("postepKill", getPostepKill())
-                .append("postepMisjiKill", getPostepMisjiKill())
-                .append("postepGive", getPostepGive())
-                .append("postepMisjiGive", getPostepMisjiGive())
-                .append("przeszywka", getPrzeszycie())
-                .append("srOdpo", getSrOdpo())
-                .append("dodatkowedmg", getDodatkowedmg());
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("postepKill", getPostepKill())
+                .put("postepMisjiKill", getPostepMisjiKill())
+                .put("postepGive", getPostepGive())
+                .put("postepMisjiGive", getPostepMisjiGive())
+                .put("przeszywka", getPrzeszycie())
+                .put("srOdpo", getSrOdpo())
+                .put("dodatkowedmg", getDodatkowedmg());
     }
 }

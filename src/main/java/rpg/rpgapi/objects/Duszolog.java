@@ -3,6 +3,7 @@ package rpg.rpgapi.objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -21,11 +22,11 @@ public class Duszolog {
         this.value2 = document.getDouble("value2");
     }
 
-    public Document toDocument() {
-        return new Document("_id", this.uuid.toString())
-                .append("mission", getMission())
-                .append("progress", getProgress())
-                .append("value1", getValue1())
-                .append("value2", getValue2());
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("mission", getMission())
+                .put("progress", getProgress())
+                .put("value1", getValue1())
+                .put("value2", getValue2());
     }
 }

@@ -3,6 +3,7 @@ package rpg.rpgapi.objects.magazynier;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -34,22 +35,22 @@ public class MagazynierUser {
         this.resetTime = document.getLong("resetTime");
     }
 
-    public Document toDocument() {
-        return new Document("_id", this.uuid.toString())
-                .append("points", this.points)
-                .append("magazyn1", this.magazyn1)
-                .append("magazyn2", this.magazyn2)
-                .append("magazyn3", this.magazyn3)
-                .append("magazyn4", this.magazyn4)
-                .append("magazyn5", this.magazyn5)
-                .append("unlocked1", this.unlocked1)
-                .append("unlocked2", this.unlocked2)
-                .append("unlocked3", this.unlocked3)
-                .append("unlocked4", this.unlocked4)
-                .append("unlocked5", this.unlocked5)
-                .append("remoteCommand", this.remoteCommand)
-                .append("missions", this.missions.toDocument())
-                .append("resetTime", this.resetTime);
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("points", this.points)
+                .put("magazyn1", this.magazyn1)
+                .put("magazyn2", this.magazyn2)
+                .put("magazyn3", this.magazyn3)
+                .put("magazyn4", this.magazyn4)
+                .put("magazyn5", this.magazyn5)
+                .put("unlocked1", this.unlocked1)
+                .put("unlocked2", this.unlocked2)
+                .put("unlocked3", this.unlocked3)
+                .put("unlocked4", this.unlocked4)
+                .put("unlocked5", this.unlocked5)
+                .put("remoteCommand", this.remoteCommand)
+                .put("missions", this.missions.toDocument())
+                .put("resetTime", this.resetTime);
     }
 
 }

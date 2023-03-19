@@ -34,6 +34,7 @@ public class MongoConnectionPoolManager {
     private final MongoCollection<Document> hellrpg_wyszkolenie;
 
     private final MongoCollection<Document> hellrpg_www_tokens;
+    private final MongoCollection<Document> hellrpg_JSON;
 
 
     public MongoConnectionPoolManager() {
@@ -109,6 +110,9 @@ public class MongoConnectionPoolManager {
         if (!collections.contains("hellrpg_www_tokens")) {
             database.createCollection("hellrpg_www_tokens");
         }
+        if (!collections.contains("hellrpg_JSON")) {
+            database.createCollection("hellrpg_JSON");
+        }
         // TU TWORZYSZ KOLEKCJE JESLI JEJ NIE MA W BAZIE DANYCH (TAKA SZUFLADA NA UZYTKOWNIKOW)
         /*if (!collections.contains("hellrpg_przykladowyNPC")) {
             database.createCollection("hellrpg_przykladowyNPC");
@@ -135,6 +139,7 @@ public class MongoConnectionPoolManager {
         this.hellrpg_handlarz = database.getCollection("hellrpg_handlarz");
         this.hellrpg_wyszkolenie = database.getCollection("hellrpg_wyszkolenie");
         this.hellrpg_www_tokens = database.getCollection("hellrpg_www_tokens");
+        this.hellrpg_JSON = database.getCollection("hellrpg_JSON");
         // TU PRZYPISUJESZ KOLEKCJE DO ZMIENNEJ
         //this.hellrpg_przykladowyNPC = database.getCollection("hellrpg_przykladowyNPC");
         System.out.println("Connected to database!");
@@ -200,9 +205,11 @@ public class MongoConnectionPoolManager {
     public MongoCollection<Document> getWyszkolenie() {
         return hellrpg_wyszkolenie;
     }
-
     public MongoCollection<Document> getWWWTokens() {
         return hellrpg_www_tokens;
+    }
+    public MongoCollection<Document> getJSON() {
+        return hellrpg_JSON;
     }
 
     // TU ROBISZ MOZWLIOSC ODWOLANIA SIE DO KOLEKCJI

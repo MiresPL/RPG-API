@@ -3,6 +3,7 @@ package rpg.rpgapi.objects.magazynier;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 @Getter
 @Setter
@@ -27,19 +28,19 @@ public class MagazynierMissions {
         this.mission5done = document.getBoolean("mission5done");
     }
 
-    public Document toDocument() {
-        return new Document("_id", "missions")
-                .append("mission1", this.mission1)
-                .append("mission2", this.mission2)
-                .append("mission3", this.mission3)
-                .append("mission4", this.mission4)
-                .append("mission5", this.mission5)
-                .append("selectedMission", this.selectedMission)
-                .append("progress", this.progress)
-                .append("mission1done", this.mission1done)
-                .append("mission2done", this.mission2done)
-                .append("mission3done", this.mission3done)
-                .append("mission4done", this.mission4done)
-                .append("mission5done", this.mission5done);
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("mission1", this.mission1)
+                .put("mission2", this.mission2)
+                .put("mission3", this.mission3)
+                .put("mission4", this.mission4)
+                .put("mission5", this.mission5)
+                .put("selectedMission", this.selectedMission)
+                .put("progress", this.progress)
+                .put("mission1done", this.mission1done)
+                .put("mission2done", this.mission2done)
+                .put("mission3done", this.mission3done)
+                .put("mission4done", this.mission4done)
+                .put("mission5done", this.mission5done);
     }
 }

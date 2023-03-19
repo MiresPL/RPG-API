@@ -2,8 +2,8 @@ package rpg.rpgapi.objects.pety;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.codec.binary.Base64;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -21,7 +21,7 @@ public class Pet {
 
     public Pet(final Document document) {
         this.uuid = UUID.fromString(document.getString("_id"));
-        this.item = new String(Base64.decodeBase64(document.getString("item")));
+        this.item = document.getString("item");
         this.name = document.getString("name");
         this.lvl = document.getInteger("lvl");
         this.exp = document.getDouble("exp");
@@ -35,19 +35,19 @@ public class Pet {
         this.ultimateAbility = document.getString("ultimateAbility");
     }
 
-    public Document toDocument() {
-        return new Document("_id", uuid.toString())
-                .append("item", getItem())
-                .append("name", getName())
-                .append("lvl", getLvl())
-                .append("exp", getExp())
-                .append("reqExp", getReqExp())
-                .append("totalExp", getTotalExp())
-                .append("rarity", getRarity())
-                .append("value1", getValue1())
-                .append("value2", getValue2())
-                .append("value3", getValue3())
-                .append("value4", getValue4())
-                .append("ultimateAbility", getUltimateAbility());
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("item", getItem())
+                .put("name", getName())
+                .put("lvl", getLvl())
+                .put("exp", getExp())
+                .put("reqExp", getReqExp())
+                .put("totalExp", getTotalExp())
+                .put("rarity", getRarity())
+                .put("value1", getValue1())
+                .put("value2", getValue2())
+                .put("value3", getValue3())
+                .put("value4", getValue4())
+                .put("ultimateAbility", getUltimateAbility());
     }
 }

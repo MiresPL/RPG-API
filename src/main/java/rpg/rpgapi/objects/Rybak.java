@@ -3,6 +3,7 @@ package rpg.rpgapi.objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -23,13 +24,13 @@ public class Rybak {
         this.blok = document.getDouble("blok");
     }
 
-    public Document toDocument() {
-        return new Document("_id", uuid.toString())
-                .append("mission", getMission())
-                .append("progress", getProgress())
-                .append("srDef", getSrDef())
-                .append("kryt", getKryt())
-                .append("morskieSzczescie", getMorskieSzczescie())
-                .append("blok", getBlok());
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("mission", getMission())
+                .put("progress", getProgress())
+                .put("srDef", getSrDef())
+                .put("kryt", getKryt())
+                .put("morskieSzczescie", getMorskieSzczescie())
+                .put("blok", getBlok());
     }
 }

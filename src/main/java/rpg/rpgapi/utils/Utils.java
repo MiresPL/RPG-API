@@ -1,10 +1,4 @@
 package rpg.rpgapi.utils;
-
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 
 public class Utils {
@@ -43,21 +37,5 @@ public class Utils {
         }
 
         return stringBuilder.length() > 0 ? stringBuilder.toString().trim() : time + "ms";
-    }
-
-    public static String[] stringArrayFromBase64(final String data) throws IOException {
-        final ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
-        final InputStreamReader dataInput = new InputStreamReader(inputStream);
-        final String[] items = new String[Integer.parseInt(dataInput.read() + "")];
-        for (int i = 0; i < items.length; ++i) {
-            final StringBuilder builder = new StringBuilder();
-            int read;
-            while ((read = dataInput.read()) != 0) {
-                builder.append((char) read);
-            }
-            items[i] = builder.toString();
-        }
-        dataInput.close();
-        return items;
     }
 }

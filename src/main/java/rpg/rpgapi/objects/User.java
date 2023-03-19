@@ -68,6 +68,7 @@ public class User {
     private Pet pet;
     private UserPets userPets;
     private Wyszkolenie wyszkolenie;
+    private WWWUser wwwUser;
 
 
     public User(final Document document) {
@@ -117,6 +118,7 @@ public class User {
         this.pet = null;
         this.userPets = null;
         this.wyszkolenie = null;
+        this.wwwUser = null;
     }
 
     private JSONObject parsePunishmentHistoryToJSON(final String punishmentHistory) {
@@ -148,53 +150,54 @@ public class User {
         return json;
     }
 
-    public Document toDocument() {
-        return new Document().append("_id", this.uuid.toString())
-                .append("name", this.name)
-                .append("banInfo", this.banInfo)
-                .append("muteInfo", this.muteInfo)
-                .append("punishmentHistory", this.parsePunishmentHistoryToJSON(this.punishmentHistory))
-                .append("rankName", this.rankName)
-                .append("rankPlayerName", this.rankPlayerName)
-                .append("rankPlayerTime", (this.rankPlayerTime == -1 ? "LifeTime" : Utils.durationToString(rankPlayerTime, false)))
-                .append("lvl", this.lvl)
-                .append("exp", this.exp)
-                .append("kasa", String.format("%.2f", this.kasa))
-                .append("hellcoins", this.hellcoins)
-                .append("msgOff", this.msgOff)
-                .append("adminCode", this.adminCode)
-                .append("adminCodeLogin", this.adminCodeLogin)
-                .append("hellCode", this.hellCode)
-                .append("hellCodeLogin", this.hellCodeLogin)
-                .append("inventory", this.getInventory())
-                .append("enderchest", this.getEnderchest())
-                .append("armor", this.getArmor())
-                .append("pierscienDoswiadczenia", this.pierscienDoswiadczenia)
-                .append("pierscienDoswiadczeniaTime", this.pierscienDoswiadczeniaTime)
-                .append("krytyk", String.format("%.2f", this.krytyk))
-                .append("kitCooldown", this.kitCooldown)
-                .append("tworca", this.tworca)
-                .append("akcesoriaPodstawowe", this.akcesoriaPodstawowe.toDocument())
-                .append("akcesoriaDodatkowe", this.akcesoriaDodatkowe.toDocument())
-                .append("bony", this.bony.toDocument())
-                .append("magazynier", this.magazynierUser.toDocument())
-                .append("bao", this.bao.toDocument())
-                .append("bonuses", this.bonuses.toDocument())
-                .append("duszolog", this.duszolog.toDocument())
-                .append("gornik", this.gornik.toDocument())
-                //.append("handlarz", this.handlarz.toDocument())
-                .append("kolekcjoner", this.kolekcjoner.toDocument())
-                .append("lesnik", this.lesnik.toDocument())
-                .append("lowca", this.lowca.toDocument())
-                .append("medrzec", this.medrzec.toDocument())
-                .append("metinolog", this.metinolog.toDocument())
-                .append("os", this.os.toDocument())
-                .append("przyrodnik", this.przyrodnik.toDocument())
-                .append("rybak", this.rybak.toDocument())
-                .append("wyslannik", this.wyslannik.toDocument())
-                .append("pet", this.pet.toDocument())
-                .append("userPets", this.userPets.toDocument())
-                .append("wyszkolenie", this.wyszkolenie.toDocument());
+    public JSONObject toDocument() {
+        return new JSONObject().put("uuid", this.uuid.toString())
+                .put("name", this.name)
+                .put("banInfo", this.banInfo)
+                .put("muteInfo", this.muteInfo)
+                .put("punishmentHistory", this.parsePunishmentHistoryToJSON(this.punishmentHistory))
+                .put("rankName", this.rankName)
+                .put("rankPlayerName", this.rankPlayerName)
+                .put("rankPlayerTime", (this.rankPlayerTime == -1 ? "LifeTime" : Utils.durationToString(rankPlayerTime, false)))
+                .put("lvl", this.lvl)
+                .put("exp", this.exp)
+                .put("kasa", String.format("%.2f", this.kasa))
+                .put("hellcoins", this.hellcoins)
+                .put("msgOff", this.msgOff)
+                .put("adminCode", this.adminCode)
+                .put("adminCodeLogin", this.adminCodeLogin)
+                .put("hellCode", this.hellCode)
+                .put("hellCodeLogin", this.hellCodeLogin)
+                //.put("inventory", this.getInventory())
+                //.put("enderchest", this.getEnderchest())
+                //.put("armor", this.getArmor())
+                .put("pierscienDoswiadczenia", this.pierscienDoswiadczenia)
+                .put("pierscienDoswiadczeniaTime", this.pierscienDoswiadczeniaTime)
+                .put("krytyk", String.format("%.2f", this.krytyk))
+                .put("kitCooldown", this.kitCooldown)
+                .put("tworca", this.tworca)
+                //.put("akcesoriaPodstawowe", this.akcesoriaPodstawowe.toDocument().toString())
+                //.put("akcesoriaDodatkowe", this.akcesoriaDodatkowe.toDocument().toString())
+                //.put("bony", this.bony.toDocument().toString())
+                .put("magazynier", this.magazynierUser.toDocument().toString())
+                .put("bao", this.bao.toDocument().toString())
+                .put("bonuses", this.bonuses.toDocument().toString())
+                .put("duszolog", this.duszolog.toDocument().toString())
+                .put("gornik", this.gornik.toDocument().toString())
+                //.put("handlarz", this.handlarz.toDocument().toString())
+                .put("kolekcjoner", this.kolekcjoner.toDocument().toString())
+                .put("lesnik", this.lesnik.toDocument().toString())
+                .put("lowca", this.lowca.toDocument().toString())
+                .put("medrzec", this.medrzec.toDocument().toString())
+                .put("metinolog", this.metinolog.toDocument().toString())
+                .put("os", this.os.toDocument().toString())
+                .put("przyrodnik", this.przyrodnik.toDocument().toString())
+                .put("rybak", this.rybak.toDocument().toString())
+                .put("wyslannik", this.wyslannik.toDocument().toString())
+                .put("pet", this.pet.toDocument().toString())
+                .put("userPets", this.userPets.toDocument().toString())
+                .put("wyszkolenie", this.wyszkolenie.toDocument().toString())
+                .put("wwwUser", this.wwwUser.toDocument().toString());
     }
 
 }

@@ -3,6 +3,7 @@ package rpg.rpgapi.objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -17,8 +18,8 @@ public class Medrzec {
         this.bonus = document.getInteger("bonus");
     }
 
-    public Document toDocument() {
-        return new Document("_id", this.uuid.toString())
-                .append("bonus", this.bonus);
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("bonus", this.bonus);
     }
 }

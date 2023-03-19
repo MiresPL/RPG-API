@@ -16,6 +16,19 @@ public class UserCacheManager {
             return null;
         }
     });
+    private final Cache<UUID, String> TOKEN_CACHE = CacheBuilder.newBuilder().expireAfterWrite(15, TimeUnit.SECONDS).build(new CacheLoader<UUID, String>() {
+        @Override
+        public String load(UUID uuid) {
+            return null;
+        }
+    });
+
+    private final Cache<String, String> NICK_CACHE = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build(new CacheLoader<String, String>() {
+        @Override
+        public String load(String s) {
+            return null;
+        }
+    });
 
     public void addUser(User user) {
         USER_CACHE.asMap().put(user.getUuid(), user);
@@ -32,5 +45,29 @@ public class UserCacheManager {
         return USER_CACHE.asMap().get(uuid);
     }
 
+    public void addToken(final UUID uuid, final String token) {
+        TOKEN_CACHE.asMap().put(uuid, token);
+    }
+
+
+    public boolean hasToken(final UUID uuid) {
+        return TOKEN_CACHE.asMap().containsKey(uuid);
+    }
+
+    public String getToken(final UUID uuid) {
+        return TOKEN_CACHE.asMap().get(uuid);
+    }
+
+    public void addNick(final String token, final String nick) {
+        NICK_CACHE.asMap().put(token, nick);
+    }
+
+    public boolean hasNick(final String token) {
+        return NICK_CACHE.asMap().containsKey(token);
+    }
+
+    public String getNick(final String token) {
+        return NICK_CACHE.asMap().get(token);
+    }
 
 }

@@ -3,6 +3,7 @@ package rpg.rpgapi.objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -27,17 +28,17 @@ public class Bao {
         this.value5 = document.getInteger("value5");
     }
 
-    public Document toDocument() {
-        return new Document("_id", uuid.toString())
-                .append("bonus1", getBonus1())
-                .append("value1", getValue1())
-                .append("bonus2", getBonus2())
-                .append("value2", getValue2())
-                .append("bonus3", getBonus3())
-                .append("value3", getValue3())
-                .append("bonus4", getBonus4())
-                .append("value4", getValue4())
-                .append("bonus5", getBonus5())
-                .append("value5", getValue5());
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("bonus1", getBonus1())
+                .put("value1", getValue1())
+                .put("bonus2", getBonus2())
+                .put("value2", getValue2())
+                .put("bonus3", getBonus3())
+                .put("value3", getValue3())
+                .put("bonus4", getBonus4())
+                .put("value4", getValue4())
+                .put("bonus5", getBonus5())
+                .put("value5", getValue5());
     }
 }

@@ -2,7 +2,9 @@ package rpg.rpgapi.database;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.mongodb.ErrorCategory;
 import com.mongodb.MongoException;
+import com.mongodb.MongoWriteException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -54,7 +56,6 @@ public class MongoManager {
                     json.put("result", true);
                     json.put("uuid", document.getString("_id"));
                     final String token = generateToken(document.getString("_id"));
-                    json.put("token", token);
                     DecodedJWT decodedJWT = JWT.decode(token);
                     final JSONObject pushTokenResponse = this.pushToken(document.getString("_id"), token, decodedJWT.getExpiresAt().getTime());
                     return json.put("tokenResponse", pushTokenResponse).toString();
@@ -79,19 +80,27 @@ public class MongoManager {
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(key)
                 .compact();
-
     }
 
     public JSONObject pushToken(final String uuid, final String token, final long expire) {
         try {
             this.pool.getWWWTokens().insertOne(new Document("_id", uuid).append("token", token).append("expire", expire));
-            return new JSONObject().put("result", true);
+            return new JSONObject().put("result", true).put("token", token);
+        } catch (final MongoWriteException e) {
+            if (e.getError().getCategory() == ErrorCategory.DUPLICATE_KEY) {
+                return new JSONObject().put("result", true).put("token", Objects.requireNonNull(this.pool.getWWWTokens().find(new Document("_id", uuid)).first()).getString("token"));
+            } else {
+                e.printStackTrace();
+                return new JSONObject().put("result", false);
+            }
         } catch (final MongoException e) {
+            e.printStackTrace();
             return new JSONObject().put("result", false);
         }
     }
 
-    public void initProfile(final UUID uuid) {
+    public void initProfile(final UUID uuidV) {
+        final String uuid = uuidV.toString();
         final User user = new User(Objects.requireNonNull(pool.getGracze().find(new Document("_id", uuid)).first()));
         final AkcesoriaPodstawowe akcesoriaPodstawowe = new AkcesoriaPodstawowe(Objects.requireNonNull(this.pool.getDodatki().find(new Document("_id", uuid)).first()).get("akcesoriaPodstawowe", Document.class));
         final AkcesoriaDodatkowe akcesoriaDodatkowe = new AkcesoriaDodatkowe(Objects.requireNonNull(this.pool.getDodatki().find(new Document("_id", uuid)).first()).get("akcesoriaDodatkowe", Document.class));
@@ -114,6 +123,7 @@ public class MongoManager {
         final Wyszkolenie wyszkolenie = new Wyszkolenie(Objects.requireNonNull(this.pool.getWyszkolenie().find(new Document("_id", uuid)).first()));
         final Pet pet = new Pet(Objects.requireNonNull(this.pool.getPety().find(new Document("_id", uuid)).first()));
         final UserPets userPets = new UserPets(Objects.requireNonNull(this.pool.getUserPets().find(new Document("_id", uuid)).first()));
+        final WWWUser wwwUser = new WWWUser(Objects.requireNonNull(this.pool.getJSON().find(new Document("_id", uuid)).first()));
 
         user.setAkcesoriaPodstawowe(akcesoriaPodstawowe);
         user.setAkcesoriaDodatkowe(akcesoriaDodatkowe);
@@ -136,13 +146,25 @@ public class MongoManager {
         user.setWyszkolenie(wyszkolenie);
         user.setPet(pet);
         user.setUserPets(userPets);
+        user.setWwwUser(wwwUser);
 
         RpgApiApplication.getUserCacheManager().addUser(user);
     }
 
-    public String getProfile(final String token) {
+    public String getProfile(final String token, final String uuid) {
         //TODO ZROBIC SPRAWDZANIE WAZNOSCI TOKENU ORAZ SAMEGO TOKENU Z BAZA
-        final UUID uuid = this.getUUIDFromToken(token);
+
+        final JSONObject checkResponse = this.checkTokenAndUUID(uuid, token);
+
+        if (!checkResponse.getBoolean("result") && !checkResponse.keySet().contains("newToken")) {
+            return checkResponse.toString();
+        }
+
+        if (checkResponse.keySet().contains("newToken")) {
+            return RpgApiApplication.getUserCacheManager().getUser(UUID.fromString(uuid)).toDocument()
+                    .append("klan", this.checkIfPlayerIsInGuild(uuid))
+                    .append("newToken", checkResponse.getString("newToken")).toString();
+        }
 
         /*
         DecodedJWT decodedJWT = JWT.decode(token);
@@ -153,7 +175,7 @@ public class MongoManager {
             return new JSONObject().put("result", false).put("errorMessage", "invalid token").toString();
         }
 
-        return RpgApiApplication.getUserCacheManager().getUser(uuid).toDocument().append("klan", this.checkIfPlayerIsInGuild(uuid.toString())).toString();
+        return RpgApiApplication.getUserCacheManager().getUser(UUID.fromString(uuid)).toDocument().put("klan", this.checkIfPlayerIsInGuild(uuid)).toString();
     }
 
     private String checkIfPlayerIsInGuild(final String uuid) {
@@ -165,23 +187,19 @@ public class MongoManager {
         return "Brak Klanu";
     }
 
-    public UUID getUUIDFromToken(final String token) {
-        for (final Document document : this.pool.getWWWTokens().find()) {
-            if (document.getString("token").equals(token)) {
-                if (document.getLong("expire") <= System.currentTimeMillis()) {
-                    return null;
-                }
-                return UUID.fromString(document.getString("_id"));
+    public JSONObject checkTokenAndUUID(final String uuid, final String token) {
+
+        if (RpgApiApplication.getUserCacheManager().hasToken(UUID.fromString(uuid))) {
+            if (RpgApiApplication.getUserCacheManager().getToken(UUID.fromString(uuid)).equals(token)) {
+                return new JSONObject().put("result", true);
             }
         }
-        return null;
-    }
 
-    public JSONObject checkTokenAndUUID(final String uuid, final String token) {
         for (final Document document : this.pool.getWWWTokens().find()) {
             if (document.getString("_id").equals(uuid)) {
                 if (document.getString("token").equals(token)) {
                     if (document.getLong("expire") <= System.currentTimeMillis()) {
+                        this.pool.getWWWTokens().deleteOne(new Document("_id", uuid));
                         final String newToken = this.generateToken(uuid);
                         return new JSONObject().put("result", false).put("errorMessage", "token expired").put("newToken", newToken).put("newTokenResponse", this.pushToken(uuid, token, JWT.decode(newToken).getExpiresAt().getTime()));
                     }
@@ -198,9 +216,15 @@ public class MongoManager {
         final JSONObject response = this.checkTokenAndUUID(uuid, token);
 
         if (response.getBoolean("result")) {
+            if (RpgApiApplication.getUserCacheManager().hasNick(token)) {
+                return new JSONObject().put("result", true).put("nick", RpgApiApplication.getUserCacheManager().getNick(token)).toString();
+            }
             return new JSONObject().put("result", true).put("nick", Objects.requireNonNull(this.pool.getGracze().find(new Document("_id", uuid)).first()).getString("name")).toString();
         } else {
             if (response.keySet().contains("newToken") && response.keySet().contains("newTokenResponse")) {
+                if (RpgApiApplication.getUserCacheManager().hasNick(response.getString("newToken"))) {
+                    return new JSONObject().put("result", true).put("nick", RpgApiApplication.getUserCacheManager().getNick(response.getString("newToken"))).toString();
+                }
                 return new JSONObject().put("result", true).put("nick", Objects.requireNonNull(this.pool.getGracze().find(new Document("_id", uuid)).first()).getString("name")).toString();
             }
             return response.toString();

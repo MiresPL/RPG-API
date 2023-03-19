@@ -3,6 +3,7 @@ package rpg.rpgapi.objects.wyszkolenie;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -27,16 +28,16 @@ public class Wyszkolenie {
         this.drzewkoWyszkolenia = new DrzewkoWyszkolenia(document.get("drzewkoWyszkolenia", Document.class));
     }
 
-    public Document toDocument() {
-        return new Document("_id", this.uuid.toString())
-                .append("punkty", this.punkty)
-                .append("totalPoints", this.totalPoints)
-                .append("srDmg", this.srDmg)
-                .append("srDef", this.srDef)
-                .append("kryt", this.kryt)
-                .append("szczescie", this.szczescie)
-                .append("blok", this.blok)
-                .append("hp", this.hp)
-                .append("drzewkoWyszkolenia", this.drzewkoWyszkolenia.toDocument());
+    public JSONObject toDocument() {
+        return new JSONObject()
+                .put("punkty", this.punkty)
+                .put("totalPoints", this.totalPoints)
+                .put("srDmg", this.srDmg)
+                .put("srDef", this.srDef)
+                .put("kryt", this.kryt)
+                .put("szczescie", this.szczescie)
+                .put("blok", this.blok)
+                .put("hp", this.hp)
+                .put("drzewkoWyszkolenia", this.drzewkoWyszkolenia.toDocument());
     }
 }
