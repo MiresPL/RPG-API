@@ -10,7 +10,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class UserCacheManager {
-    private final Cache<UUID, User> USER_CACHE = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build(new CacheLoader<UUID, User>() {
+    private final Cache<UUID, User> USER_CACHE = CacheBuilder.newBuilder().expireAfterWrite(2, TimeUnit.MINUTES).build(new CacheLoader<UUID, User>() {
         @Override
         public User load(UUID uuid) {
             return null;
@@ -23,7 +23,7 @@ public class UserCacheManager {
         }
     });
 
-    private final Cache<String, String> NICK_CACHE = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build(new CacheLoader<String, String>() {
+    private final Cache<String, String> NICK_CACHE = CacheBuilder.newBuilder().expireAfterWrite(2, TimeUnit.MINUTES).build(new CacheLoader<String, String>() {
         @Override
         public String load(String s) {
             return null;
