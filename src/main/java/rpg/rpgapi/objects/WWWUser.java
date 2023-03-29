@@ -19,6 +19,7 @@ public class WWWUser {
     private String bonyJSON;
     private String userPetyJSON;
     private String activePet;
+    private String magazyn1JSON, magazyn2JSON, magazyn3JSON, magazyn4JSON, magazyn5JSON;
 
     public WWWUser(final Document document) {
         this.uuid = UUID.fromString(document.getString("_id"));
@@ -30,6 +31,11 @@ public class WWWUser {
         this.bonyJSON = document.getString("bonyJSON");
         this.userPetyJSON = document.getString("userPetyJSON");
         this.activePet = document.getString("activePet");
+        this.magazyn1JSON = document.get("magazyny", Document.class).getString("magazyn1JSON");
+        this.magazyn2JSON = document.get("magazyny", Document.class).getString("magazyn2JSON");
+        this.magazyn3JSON = document.get("magazyny", Document.class).getString("magazyn3JSON");
+        this.magazyn4JSON = document.get("magazyny", Document.class).getString("magazyn4JSON");
+        this.magazyn5JSON = document.get("magazyny", Document.class).getString("magazyn5JSON");
     }
 
     public JSONObject toDocument() {
@@ -41,6 +47,13 @@ public class WWWUser {
                 .put("akcesoriaDodatkoweJSON", this.akcesoriaDodatkoweJSON)
                 .put("bonyJSON", this.bonyJSON)
                 .put("userPetyJSON", this.userPetyJSON)
-                .put("activePet", this.activePet);
+                .put("activePet", this.activePet)
+                .put("magazyny", new JSONObject()
+                        .put("magazyn1JSON", this.magazyn1JSON)
+                        .put("magazyn2JSON", this.magazyn2JSON)
+                        .put("magazyn3JSON", this.magazyn3JSON)
+                        .put("magazyn4JSON", this.magazyn4JSON)
+                        .put("magazyn5JSON", this.magazyn5JSON)
+                );
     }
 }

@@ -11,7 +11,8 @@ import java.util.Map;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
-@CrossOrigin(origins = {"https://www.hellrpg.pl", "https://hellrpg.pl"}, allowedHeaders = "*")
+//@CrossOrigin(origins = {"https://www.hellrpg.pl", "https://hellrpg.pl"}, allowedHeaders = "*")
+@CrossOrigin(origins = {"*"}, allowedHeaders = "*")
 @RequestMapping(path = "/api/profile", method = POST)
 public class NickController {
     @RequestMapping(path = "/nick", method = POST, produces = "application/json", consumes = "application/json")
