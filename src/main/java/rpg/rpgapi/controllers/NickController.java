@@ -20,5 +20,4 @@ public class NickController {
         final String token = String.valueOf(postData.get("token"));
         return RpgApiApplication.getMongoManager().getNick(uuid, token);
     }
-
 }

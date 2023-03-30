@@ -31,6 +31,10 @@ public class UserCacheManager {
     });
 
     public void addUser(User user) {
+        if (USER_CACHE.asMap().containsKey(user.getUuid())) {
+            USER_CACHE.asMap().replace(user.getUuid(), user);
+            return;
+        }
         USER_CACHE.asMap().put(user.getUuid(), user);
     }
 
@@ -38,9 +42,13 @@ public class UserCacheManager {
         return USER_CACHE.asMap().containsKey(uuid);
     }
 
-    public User getUser(final UUID uuid) {
-        if (!hasUser(uuid)) {
-            RpgApiApplication.getMongoManager().initProfile(uuid);
+    public User getUser(final UUID uuid, final boolean force) {
+        if (!hasUser(uuid) || force) {
+            final User user = RpgApiApplication.getMongoManager().initProfile(uuid);
+            if (user != null) {
+                addUser(user);
+            }
+            return user;
         }
         return USER_CACHE.asMap().get(uuid);
     }

@@ -85,22 +85,14 @@ public class MongoManager {
     public JSONObject pushToken(final String uuid, final String token, final long expire) {
         try {
             this.pool.getWWWTokens().insertOne(new Document("_id", uuid).append("token", token).append("expire", expire));
-            return new JSONObject().put("result", true).put("token", token);
-        } catch (final MongoWriteException e) {
-            if (e.getError().getCategory() == ErrorCategory.DUPLICATE_KEY) {
-                return new JSONObject().put("result", true).put("token", Objects.requireNonNull(this.pool.getWWWTokens().find(new Document("_id", uuid)).first()).getString("token"));
-            } else {
-                e.printStackTrace();
-                return new JSONObject().put("result", false);
-            }
+            return new JSONObject().put("result", true);
         } catch (final MongoException e) {
             e.printStackTrace();
             return new JSONObject().put("result", false);
         }
     }
 
-    public void initProfile(final UUID uuidV) {
-        final String uuid = uuidV.toString();
+    public User initProfile(final UUID uuid) {
         final User user = new User(Objects.requireNonNull(pool.getGracze().find(new Document("_id", uuid)).first()));
         final AkcesoriaPodstawowe akcesoriaPodstawowe = new AkcesoriaPodstawowe(Objects.requireNonNull(this.pool.getDodatki().find(new Document("_id", uuid)).first()).get("akcesoriaPodstawowe", Document.class));
         final AkcesoriaDodatkowe akcesoriaDodatkowe = new AkcesoriaDodatkowe(Objects.requireNonNull(this.pool.getDodatki().find(new Document("_id", uuid)).first()).get("akcesoriaDodatkowe", Document.class));
@@ -148,7 +140,7 @@ public class MongoManager {
         user.setUserPets(userPets);
         user.setWwwUser(wwwUser);
 
-        RpgApiApplication.getUserCacheManager().addUser(user);
+        return user;
     }
 
     public String getProfile(final String token, final String uuid) {
@@ -161,7 +153,7 @@ public class MongoManager {
         }
 
         if (checkResponse.keySet().contains("newToken")) {
-            return RpgApiApplication.getUserCacheManager().getUser(UUID.fromString(uuid)).toDocument()
+            return RpgApiApplication.getUserCacheManager().getUser(UUID.fromString(uuid), false).toDocument()
                     .append("klan", this.checkIfPlayerIsInGuild(uuid))
                     .append("newToken", checkResponse.getString("newToken")).toString();
         }
@@ -175,7 +167,7 @@ public class MongoManager {
             return new JSONObject().put("result", false).put("errorMessage", "invalid token").toString();
         }
 
-        return RpgApiApplication.getUserCacheManager().getUser(UUID.fromString(uuid)).toDocument().put("klan", this.checkIfPlayerIsInGuild(uuid)).toString();
+        return RpgApiApplication.getUserCacheManager().getUser(UUID.fromString(uuid), false).toDocument().put("klan", this.checkIfPlayerIsInGuild(uuid)).toString();
     }
 
     private String checkIfPlayerIsInGuild(final String uuid) {
